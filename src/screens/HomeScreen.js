@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { FlatList, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
 import GenreCard from "../components/GenreCard"
+import MovieCard from "../components/MovieCard"
 import Colors from "../constants/Colors"
 
 const genres = ["All", "Action", "Comedy", "Romance", "Horror", "Sci-Fi"]
@@ -19,9 +20,20 @@ const HomeScreen = ()=>{
                 <FlatList 
                     data={genres}
                     horizontal
+                    showsHorizontalScrollIndicator={false}
                     renderItem={({item, index})=> <GenreCard key={index} genre={item} press={press} btnActive={item === btnActive ? true : false}/>}
                     keyExtractor={item=>item.id}
                 />
+            </View>
+            <View>
+                <FlatList 
+                    data={genres}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item, index})=><MovieCard />
+                    }
+                />
+
             </View>
         </ScrollView>
     )

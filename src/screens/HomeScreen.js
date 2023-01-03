@@ -1,15 +1,28 @@
+import { useEffect } from "react"
 import { useState } from "react"
 import { FlatList, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
 import GenreCard from "../components/GenreCard"
 import MovieCard from "../components/MovieCard"
 import Colors from "../constants/Colors"
+import { getComingMovies, getGenres, getNowShowingMovies } from "../services/MovieServices"
 
 const genres = ["All", "Action", "Comedy", "Romance", "Horror", "Sci-Fi"]
 
-const HomeScreen = ()=>{
-    const [btnActive, setActive] = useState("All")
-    const press = (activeGenre="All")=> setActive(activeGenre)
+const HomeScreen = ({navigation})=>{
+    const [btnActive, setActive] = useState()
+    const [dataMovie, setDataMovie] = useState([])
+    const [genresMovie, setGenres] = useState([])
+    const [upcomingMovies, setComingMovie] = useState([])
+    const onPressGenre = (activeGenre)=> setActive(activeGenre)
+    const onPressMovie = (id)=> navigation.navigate("Movie", {movieId: id})
+    console.log(dataMovie)
+    useEffect(()=>{
+        getNowShowingMovies().then((movieResp)=> setDataMovie(movieResp.data))
+        getGenres().then((movieGengres)=> setGenres(movieGengres.data))
+        getComingMovies().then((moviesUpcoming)=> setComingMovie(moviesUpcoming.data))
+    }, [])
 
+    console.log(upcomingMovies)
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.headerContainer}>
@@ -18,22 +31,54 @@ const HomeScreen = ()=>{
             </View>
             <View>
                 <FlatList 
-                    data={genres}
+                    data={genresMovie}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({item, index})=> <GenreCard key={index} genre={item} press={press} btnActive={item === btnActive ? true : false}/>}
+                    renderItem={({item})=> <GenreCard 
+                        key={item.id} 
+                        genre={item.name} 
+                        pressGenre={onPressGenre} 
+                        btnActive={item.name === btnActive ? true : false}
+                    />}
                     keyExtractor={item=>item.id}
+                    
                 />
             </View>
             <View>
                 <FlatList 
-                    data={genres}
+                    data={dataMovie}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({item, index})=><MovieCard />
+                    renderItem={({item, index})=><MovieCard 
+                        title={item.title}
+                        vote_imdb={item.vote_average}
+                        subTitle={item.overview}
+                        release_date={item.release_date}
+                        vote_count={item.vote_count}
+                        onPressMovie={onPressMovie}
+
+                    />
                     }
                 />
 
+            </View>
+            <View style={styles.headerContainer}>
+                <Text style={styles.headerTitle}>Now Showing</Text>
+                <Text style={styles.headerSubtitle}>VIEW ALL</Text>
+            </View>
+            <View>
+                <FlatList 
+                    data={upcomingMovies}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item})=><MovieCard
+                    title={item.title}
+                    vote_imdb={item.vote_average}
+                    subTitle={item.overview}
+                    release_date={item.release_date}
+                    vote_count={item.vote_count}
+                    />}
+                />
             </View>
         </ScrollView>
     )

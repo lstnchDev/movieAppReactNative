@@ -1,5 +1,6 @@
 export default {
     DEFAULT_BACKGROUND: "#F5F7FA",
     DEFAULT_BTN: "blue",
-    WHITE: "#FFFFFF"
+    WHITE: "#FFFFFF",
+    IMDB_COLOR: "#FFFF00"
 }

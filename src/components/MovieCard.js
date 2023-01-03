@@ -1,16 +1,18 @@
-import { Alert, StyleSheet, Text, View } from "react-native"
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Colors from "../constants/Colors"
 import { AntDesign, EvilIcons, Fontisto  } from '@expo/vector-icons'; 
 import { useState } from "react";
 
-const MovieCard = ()=>{
+const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPressMovie})=>{
     const [likeState, setLike] = useState(false)
     
     const onPressLike=()=>setLike(!likeState)
     
+    const onPress = ()=> onPressMovie(0)
+
     return(
         <View style={styles.container}>
-            <View style={styles.movieContainer}>
+            <TouchableOpacity style={styles.movieContainer} onPress={onPress}>
                 <AntDesign 
                     name="heart" 
                     size={22} 
@@ -18,20 +20,21 @@ const MovieCard = ()=>{
                     style={{position: "absolute", bottom: 10, left: 5}} 
                     onPress={onPressLike}
                     />
+                <Text style={styles.title}>{title}</Text>
                 <Fontisto 
                     name="imdb" 
                     size={35} 
                     color="yellow" 
                     style={{position: "absolute", right: 5}}
                 >
-                    <Text style={{color:"red", fontSize: 22}}>9.4</Text>
+                    <Text style={styles.vote}>{vote_imdb}</Text>
                 </Fontisto>
-            </View>
+            </TouchableOpacity>
             <View>
-                <Text numberOfLines={2}>IRO - Surgial Strike Web Collection Steet Wev sadsadsadsadsa</Text>
+                <Text numberOfLines={2}>{subTitle}</Text>
             </View>
             <View style={styles.rating}>
-                <Text>Hindi | (U/A)</Text>
+                <Text>Release: {release_date}</Text>
                     <View style={styles.rating}>
                         <AntDesign 
                             name="heart" 
@@ -39,7 +42,7 @@ const MovieCard = ()=>{
                             color="red" 
                             style={{marginHorizontal: 10}} 
                         />
-                        <Text>90%</Text>
+                        <Text>{vote_count}</Text>
                     </View>
                 </View>
             </View>
@@ -62,6 +65,21 @@ const styles= StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
 
+    },
+    title: {
+        textAlign: "center",
+        color: Colors.WHITE,
+        fontWeight: 600,
+        fontSize: 22,
+        marginVertical: 120,
+    },
+    vote: {
+        color:"red", 
+        fontSize: 22, 
+        backgroundColor: Colors.IMDB_COLOR,
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        textAlign: "center",
     }
 })
 

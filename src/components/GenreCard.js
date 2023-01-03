@@ -2,13 +2,13 @@ import { useState } from "react"
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Colors from "../constants/Colors"
 
-const GenreCard = ({genre, btnActive, press})=>{
+const GenreCard = ({genre, btnActive, pressGenre})=>{
 
     return (
         <TouchableOpacity style={{
             ...styles.container,
             backgroundColor: btnActive ? Colors.DEFAULT_BTN : Colors.WHITE
-            }} onPress={()=>press(genre)}>
+            }} onPress={()=>pressGenre(genre)}>
             <Text>{genre}</Text>
         </TouchableOpacity>
     )

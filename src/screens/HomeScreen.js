@@ -1,30 +1,37 @@
 import { useEffect } from "react"
 import { useState } from "react"
-import { FlatList, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native"
 import GenreCard from "../components/GenreCard"
+import Loader from "../components/Loader"
 import MovieCard from "../components/MovieCard"
 import Colors from "../constants/Colors"
 import { getComingMovies, getGenres, getNowShowingMovies } from "../services/MovieServices"
 
-const genres = ["All", "Action", "Comedy", "Romance", "Horror", "Sci-Fi"]
 
 const HomeScreen = ({navigation})=>{
-    const [btnActive, setActive] = useState()
+    const [activeGenresState, setActive] = useState()
     const [dataMovie, setDataMovie] = useState([])
     const [genresMovie, setGenres] = useState([])
     const [upcomingMovies, setComingMovie] = useState([])
-    const onPressGenre = (activeGenre)=> setActive(activeGenre)
+
+    const onPressGenre = (activeGenre)=> activeGenre === activeGenresState ? setActive() : setActive(activeGenre)
     const onPressMovie = (movieTitle)=> navigation.navigate("Movie", {movieTitle: movieTitle})
-    console.log(dataMovie)
+
+    console.log(dataMovie.length >=0)
+
     useEffect(()=>{
         getNowShowingMovies().then((movieResp)=> setDataMovie(movieResp.data))
         getGenres().then((movieGengres)=> setGenres(movieGengres.data))
         getComingMovies().then((moviesUpcoming)=> setComingMovie(moviesUpcoming.data))
     }, [])
 
-    console.log(upcomingMovies)
+    const filterDataMovie = activeGenresState == undefined ? dataMovie : dataMovie.filter((item)=> (item.genre_ids.includes(activeGenresState)))
+    console.log(filterDataMovie)
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <>
+        {dataMovie.length <1  ? <Loader /> 
+            :
+            <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Now Showing</Text>
                 <Text style={styles.headerSubtitle}>VIEW ALL</Text>
@@ -36,33 +43,39 @@ const HomeScreen = ({navigation})=>{
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=> <GenreCard 
                         key={item.id} 
+                        genreId={item.id}
                         genre={item.name} 
                         pressGenre={onPressGenre} 
-                        btnActive={item.name === btnActive ? true : false}
+                        btnActive={item.id === activeGenresState ? true : false}
                     />}
                     keyExtractor={item=>item.id}
                     
                 />
             </View>
             <View>
-                <FlatList 
-                    data={dataMovie}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({item, index})=><MovieCard 
-                        title={item.title}
-                        vote_imdb={item.vote_average}
-                        subTitle={item.overview}
-                        release_date={item.release_date}
-                        vote_count={item.vote_count}
-                        onPressMovie={onPressMovie}
+                {filterDataMovie.length === 0 ? <Text>По заданной фильтрации нет фильмов</Text>
+                    :
+                    <FlatList 
+                        data={filterDataMovie}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({item})=><MovieCard 
+                            title={item.title}
+                            vote_imdb={item.vote_average}
+                            subTitle={item.overview}
+                            release_date={item.release_date}
+                            vote_count={item.vote_count}
+                            onPressMovie={onPressMovie}
+                        />
+                        }
                     />
-                    }
-                />
+                }
+
+               
 
             </View>
             <View style={styles.headerContainer}>
-                <Text style={styles.headerTitle}>Now Showing</Text>
+                <Text style={styles.headerTitle}>Upcoming</Text>
                 <Text style={styles.headerSubtitle}>VIEW ALL</Text>
             </View>
             <View>
@@ -81,6 +94,8 @@ const HomeScreen = ({navigation})=>{
                 />
             </View>
         </ScrollView>
+        }
+        </>
     )
 }
 

@@ -14,7 +14,7 @@ const HomeScreen = ({navigation})=>{
     const [genresMovie, setGenres] = useState([])
     const [upcomingMovies, setComingMovie] = useState([])
     const onPressGenre = (activeGenre)=> setActive(activeGenre)
-    const onPressMovie = (id)=> navigation.navigate("Movie", {movieId: id})
+    const onPressMovie = (movieTitle)=> navigation.navigate("Movie", {movieTitle: movieTitle})
     console.log(dataMovie)
     useEffect(()=>{
         getNowShowingMovies().then((movieResp)=> setDataMovie(movieResp.data))
@@ -56,7 +56,6 @@ const HomeScreen = ({navigation})=>{
                         release_date={item.release_date}
                         vote_count={item.vote_count}
                         onPressMovie={onPressMovie}
-
                     />
                     }
                 />
@@ -77,6 +76,7 @@ const HomeScreen = ({navigation})=>{
                     subTitle={item.overview}
                     release_date={item.release_date}
                     vote_count={item.vote_count}
+
                     />}
                 />
             </View>

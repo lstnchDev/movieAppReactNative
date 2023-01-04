@@ -3,12 +3,12 @@ import Colors from "../constants/Colors"
 import { AntDesign, EvilIcons, Fontisto  } from '@expo/vector-icons'; 
 import { useState } from "react";
 
-const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPressMovie})=>{
+const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPressMovie,})=>{
     const [likeState, setLike] = useState(false)
     
     const onPressLike=()=>setLike(!likeState)
     
-    const onPress = ()=> onPressMovie(0)
+    const onPress = ()=> onPressMovie(title)
 
     return(
         <View style={styles.container}>

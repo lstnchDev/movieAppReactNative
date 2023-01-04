@@ -6,7 +6,8 @@ const ENDPOINTS = {
     NOW_SHOWING: "now_showing",
     GENRES: "genres",
     UPCOMING: "upcoming",
-    NAME: "name"
+    NAME: "name",
+    MOVIEID: "movieId"
 }
 
 export {BASE_URL, API_KEY, KP_API_KEY, ENDPOINTS}

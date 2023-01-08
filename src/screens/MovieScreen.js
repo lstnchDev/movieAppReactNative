@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
-import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native"
+import { Button, Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from "react-native"
+import SwiperFlatList from "react-native-swiper-flatlist"
 import Loader from "../components/Loader"
 import ReviewCard from "../components/ReviewCard"
 import Colors from "../constants/Colors"
 import { getMovieDetail, getReview } from "../services/MovieServices"
 
 
-const MovieScreen = ({navitgation, route})=>{
+const MovieScreen = ({route})=>{
 
     const [dataMovie, setDataMovie] = useState([])
     const [dataReview, setDataReview] = useState([])
@@ -29,46 +30,102 @@ const MovieScreen = ({navitgation, route})=>{
         <>
             {dataMovie.length <1 ? <Loader />
             :
-                <View>
-                <View style={{width: 400}}>
-                    <Image  source={{uri: 'https://st.kp.yandex.net/images/film_big/1009017.jpg'}} />
-                </View>
-                <Text>{dataMovie.name}</Text>
-                <Text>{dataMovie.description}</Text>
-                <Text>IMDB: {rating.imdb}, KP: {rating.kp}</Text>
-                <Text>Дата выхода: {dataMovie.year}</Text>
-                <Button 
-                    title={btnTitle}
-                    color={Colors.DEFAULT_BTN}
-                    onPress={onGetReview}
-                />
-                <View style={{display: `${reviewStatus ? "flex" : "none"}`}}>
-                    {dataReview.length <1 ? <Loader />
-                        : <FlatList
-                        data={dataReview}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({item})=>
-                            <ReviewCard 
-                                key={item.id}
-                                title={item.title}
-                                type={item.type}
-                                review={item.review}
-                                keyExtractor={item=>item.id}
-                            />
-                    }/>  
-                    }
-                       
-                </View>
-            </View>
+                <ScrollView style={styles.container}>
+                    <View >
+                        <Image style={styles.poster}  source={{uri: poster}} />
+                    </View>
+                    <Text style={styles.title}>{dataMovie.name}</Text>
+                    <Text style={styles.subTitle}>{dataMovie.description}</Text>
+                    <View style={styles.rating}>
+                        <Text style={styles.textRating}>IMDB: {rating.imdb}, KP: {rating.kp}</Text>
+                        <Text style={styles.textRating}>Дата выхода: {dataMovie.year}</Text>
+                    </View>
+                    <Button 
+                        title={btnTitle}
+                        color={Colors.DEFAULT_BTN}
+                        onPress={onGetReview}
+                    />
+                    <View style={{display: `${reviewStatus ? "flex" : "none"}`}}>
+                        {dataReview.length <1 ? <Loader />
+                            : 
+                            <View style={styles.reviewContainer}>
+                                <SwiperFlatList
+                                    autoplayDelay={2}
+                                    autoplayLoop
+                                    index={2}
+                                    data={dataReview}
+                                    renderItem={({ item }) => (
+                                        <View style={[styles.child, { backgroundColor: item }]}>
+                                            <Text style={styles.title}>{item.title} - {item.type}</Text>
+                                            <Text style={styles.review}>{item.review}</Text>
+                                        </View>
+                                    )}
+                                />
+                            </View>
+                        }
+                        
+                    </View>
+            </ScrollView>
             }
         </>
        
     )
 }
 
-const styles = StyleSheet({
+const { width } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    poster: {
+        width: 350,
+        height: 350,
+        marginVertical: 20,
+        alignSelf: "center",
+    },
     container:{
+        width: width,
+    },
+    title:{
+        fontSize: 20,
+        fontStyle: "normal",
+        fontWeight: "bold"
+    },
+    subTitle: {
+        fontSize: 16,
+        marginVertical: 10,
+        textAlign: 'center'
+    },
+    rating: {
+        flexDirection: "row", 
+        justifyContent: "space-around",
+        marginVertical: 5,
+    },
+    textRating: {
+        fontSize: 16,
+        fontWeight: "bold"
+    },
+    title: {
+        fontSize: 20,
+        textAlign: "center",
+        marginVertical: 10,
+    },
+
+    reviewContainer: { 
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: 'white',
+        padding: 5,
+    },
+    child: { 
+        width: width-10,
+
+     },
+
+    review: {
+        padding: 25,
+        marginHorizontal: 10,
+        fontSize: 16,
+        backgroundColor: "yellow",
+        borderRadius: 10,
 
     }
 })

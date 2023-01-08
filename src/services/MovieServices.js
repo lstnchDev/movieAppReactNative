@@ -1,5 +1,5 @@
 import axios from "axios"
-import { BASE_URL, ENDPOINTS, API_KEY, KP_API_KEY } from "../constants/MovieApi"
+import {ENDPOINTS, KP_API_KEY } from "../constants/MovieApi"
 
 
 

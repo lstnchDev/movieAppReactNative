@@ -1,9 +1,9 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Colors from "../constants/Colors"
-import { AntDesign, EvilIcons, Fontisto  } from '@expo/vector-icons'; 
+import { AntDesign, Fontisto  } from '@expo/vector-icons'; 
 import { useState } from "react";
 
-const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPressMovie,})=>{
+const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPressMovie, original_title})=>{
     const [likeState, setLike] = useState(false)
     
     const onPressLike=()=>setLike(!likeState)
@@ -20,33 +20,36 @@ const MovieCard = ({title, vote_imdb, vote_count, subTitle, release_date, onPres
                     style={{position: "absolute", bottom: 10, left: 5}} 
                     onPress={onPressLike}
                     />
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title}>{original_title}</Text>
                 <Fontisto 
                     name="imdb" 
                     size={35} 
                     color="yellow" 
-                    style={{position: "absolute", right: 5}}
+                    style={styles.vote}
                 >
-                    <Text style={styles.vote}>{vote_imdb}</Text>
+                    <Text style={styles.voteText}>{vote_imdb}</Text>
                 </Fontisto>
             </TouchableOpacity>
-            <View>
-                <Text numberOfLines={2}>{subTitle}</Text>
-            </View>
-            <View style={styles.rating}>
-                <Text>Release: {release_date}</Text>
-                    <View style={styles.rating}>
-                        <AntDesign 
-                            name="heart" 
-                            size={24} 
-                            color="red" 
-                            style={{marginHorizontal: 10}} 
-                        />
-                        <Text>{vote_count}</Text>
+            <View style={styles.titleContainer}>
+                <View>
+                        <Text style={styles.movieTitle} numberOfLines={2}>{title}</Text>
                     </View>
+                    <View style={styles.rating}>
+                        <Text>Release: {release_date}</Text>
+                            <View style={styles.rating}>
+                                <AntDesign 
+                                    name="heart" 
+                                    size={24} 
+                                    color="red" 
+                                    style={{marginHorizontal: 5}} 
+                                />
+                                <Text>{vote_count}</Text>
+                            </View>
+                        </View>
                 </View>
             </View>
-    )
+    )    
+
 }
 
 const styles= StyleSheet.create({
@@ -58,8 +61,10 @@ const styles= StyleSheet.create({
     },
     movieContainer:{
         backgroundColor: Colors.DEFAULT_BTN,
-        height: 300,
         borderRadius: 12,
+        height: 300,
+
+
     },
     rating:{
         flexDirection: "row",
@@ -69,17 +74,27 @@ const styles= StyleSheet.create({
     title: {
         textAlign: "center",
         color: Colors.WHITE,
-        fontWeight: 600,
+        fontWeight: "bold",
         fontSize: 22,
         marginVertical: 120,
     },
     vote: {
-        color:"red", 
-        fontSize: 22, 
-        backgroundColor: Colors.IMDB_COLOR,
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        textAlign: "center",
+        position: "absolute", 
+        right: 5,
+        flexDirection: "column"
+    },
+    voteText: {
+        textAllign: "center",
+        color: Colors.IMDB_COLOR, 
+        fontSize: 20, 
+        title: {
+
+    },
+    titleContainer:{
+        marginVertical: 10,
+    },
+    movieTitle: {
+        marginVertical: 5,
     }
 })
 

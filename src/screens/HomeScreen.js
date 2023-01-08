@@ -17,7 +17,6 @@ const HomeScreen = ({navigation})=>{
     const onPressGenre = (activeGenre)=> activeGenre === activeGenresState ? setActive() : setActive(activeGenre)
     const onPressMovie = (movieTitle)=> navigation.navigate("Movie", {movieTitle: movieTitle})
 
-    console.log(dataMovie.length >=0)
 
     useEffect(()=>{
         getNowShowingMovies().then((movieResp)=> setDataMovie(movieResp.data))
@@ -26,12 +25,11 @@ const HomeScreen = ({navigation})=>{
     }, [])
 
     const filterDataMovie = activeGenresState == undefined ? dataMovie : dataMovie.filter((item)=> (item.genre_ids.includes(activeGenresState)))
-    console.log(filterDataMovie)
     return (
-        <>
+        <ScrollView>
         {dataMovie.length <1  ? <Loader /> 
             :
-            <ScrollView contentContainerStyle={styles.container}>
+            <View contentContainerStyle={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Now Showing</Text>
                 <Text style={styles.headerSubtitle}>VIEW ALL</Text>
@@ -61,18 +59,15 @@ const HomeScreen = ({navigation})=>{
                         showsHorizontalScrollIndicator={false}
                         renderItem={({item})=><MovieCard 
                             title={item.title}
+                            original_title={item.original_title}
                             vote_imdb={item.vote_average}
                             subTitle={item.overview}
                             release_date={item.release_date}
                             vote_count={item.vote_count}
                             onPressMovie={onPressMovie}
-                        />
-                        }
+                        />}
                     />
                 }
-
-               
-
             </View>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Upcoming</Text>
@@ -84,18 +79,19 @@ const HomeScreen = ({navigation})=>{
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item})=><MovieCard
-                    title={item.title}
-                    vote_imdb={item.vote_average}
-                    subTitle={item.overview}
-                    release_date={item.release_date}
-                    vote_count={item.vote_count}
-
+                        title={item.title}
+                        original_title={item.original_title}
+                        vote_imdb={item.vote_average}
+                        subTitle={item.overview}
+                        release_date={item.release_date}
+                        vote_count={item.vote_count}
+                        onPressMovie={onPressMovie}
                     />}
                 />
             </View>
-        </ScrollView>
+        </View>
         }
-        </>
+        </ScrollView>
     )
 }
 
@@ -108,7 +104,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent:"space-between",
         paddingHorizontal: 25,
-        paddingVertical: 20
+        paddingVertical: 20,
     },
     headerTitle: {
         fontSize: 28

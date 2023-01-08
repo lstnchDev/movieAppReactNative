@@ -7,9 +7,12 @@ const GenreCard = ({genre, btnActive, pressGenre, genreId})=>{
     return (
         <TouchableOpacity style={{
             ...styles.container,
-            backgroundColor: btnActive ? Colors.DEFAULT_BTN : Colors.WHITE
+            backgroundColor: btnActive ? Colors.DEFAULT_BTN : Colors.WHITE,
             }} onPress={()=>pressGenre(genreId)}>
-            <Text>{genre}</Text>
+            <Text style={{
+                ...styles.title,
+                color: btnActive ? Colors.WHITE : "black"
+            }}>{genre}</Text>
         </TouchableOpacity>
     )
 }
@@ -21,6 +24,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         margin: 5,
         width: 100,
+    },
+    title: {
+        fontWeight: "bold",
     }
 })
 export default GenreCard
